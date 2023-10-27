@@ -11,7 +11,7 @@ import {
   WalletName,
   WalletType
 } from 'cosmes/wallet'
-import { LiquidityModal } from '@leapwallet/elements'
+import { LiquidityModal, Tabs } from '@leapwallet/elements'
 import '@leapwallet/elements/styles.css'
 
 const WC_PROJECT_ID = '2b7d5a2da89dd74fed821d184acabf95'
@@ -222,7 +222,7 @@ const App = () => {
     })
   }, [connect])
 
-  const currentWallet = wallets[chain]
+  const currentWallet = wallets[chain] as ConnectedWallet | undefined
 
   //export interface StdSignDoc {
   //     readonly chain_id: string;
@@ -307,7 +307,9 @@ const App = () => {
           onChange={(e) => setChain(e.target.value)}
         >
           {Object.keys(CHAINS).map((id) => (
-            <option value={id}>{CHAINS[id]}</option>
+            <option key={id} value={id}>
+              {CHAINS[id]}
+            </option>
           ))}
         </select>
         <div className="flex space-x-2">
@@ -317,7 +319,9 @@ const App = () => {
             onChange={(e) => setWallet(e.target.value as WalletName)}
           >
             {Object.keys(WALLETS).map((wallet) => (
-              <option value={wallet}>{WALLETS[wallet as WalletName]}</option>
+              <option key={wallet} value={wallet}>
+                {WALLETS[wallet as WalletName]}
+              </option>
             ))}
           </select>
           <select
@@ -326,7 +330,9 @@ const App = () => {
             onChange={(e) => setType(e.target.value as WalletType)}
           >
             {Object.keys(TYPES).map((type) => (
-              <option value={type}>{TYPES[type as WalletType]}</option>
+              <option key={type} value={type}>
+                {TYPES[type as WalletType]}
+              </option>
             ))}
           </select>
         </div>
@@ -363,7 +369,7 @@ const App = () => {
         <div className="flex flex-col">
           <code>CONNECTED WALLETS</code>
           {Object.values(wallets).map((wallet) => (
-            <code>
+            <code key={wallet.id}>
               {wallet.address.slice(0, 10)}
               ...{wallet.address.slice(-5)} | {WALLETS[wallet.id]}
             </code>
@@ -374,10 +380,20 @@ const App = () => {
         config={{
           icon: '/vite.svg',
           title: 'Try out Liquidity Modal',
-          subtitle: 'With CosmES'
+          subtitle: 'With CosmES',
+          tabsConfig: {
+            [Tabs.CROSS_CHAIN_SWAPS]: {
+              enabled: false
+            },
+            [Tabs.TRANSFER]: {
+              defaults: {
+                destinationChainId: 'osmosis-1'
+              }
+            }
+          }
         }}
         walletClientConfig={{
-          userAddress: currentWallet.address,
+          userAddress: currentWallet?.address,
           walletClient: {
             enable: (chainIds: string | string[]): Promise<void> => {
               return connect(
@@ -388,12 +404,12 @@ const App = () => {
             getKey: (chainId: string) => {
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
-              return currentWallet.ext.getKey(chainId)
+              return currentWallet?.ext.getKey(chainId)
             },
             getOfflineSigner: (chainId: string) => {
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
-              return currentWallet.ext.getOfflineSigner(chainId)
+              return currentWallet?.ext.getOfflineSigner(chainId)
             }
           },
           connectWallet: () => connect(type, [chain])

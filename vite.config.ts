@@ -3,14 +3,13 @@ import react from '@vitejs/plugin-react'
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
   define: {
-    global: 'window',
     esbuildOptions: {
       // Node.js global to browser globalThis
       define: {
-        global: 'globalThis',
+        global: mode === 'production' ? 'globalThis' : 'global',
         Buffer: 'buffer'
       },
       // Enable esbuild polyfill plugins
@@ -21,4 +20,4 @@ export default defineConfig({
       ]
     }
   }
-})
+}))
