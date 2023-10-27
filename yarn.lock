@@ -1561,8 +1561,8 @@
 
 "@leapwallet/elements-core@*":
   version "0.9.0"
-  resolved "https://npm.pkg.github.com/download/@leapwallet/elements-core/0.9.0/5de2097d78e354dc2956879deb8c9bef954bfe72#5de2097d78e354dc2956879deb8c9bef954bfe72"
-  integrity sha512-TZGksKQCfehCtsy0EPCZ9cdt5k2dh0ibOb5hjbE3qFkAViMkdR8UHMHcnmj2n73MguqbjqGXGcyFIH4ALTqRcA==
+  resolved "https://registry.npmjs.org/@leapwallet/elements-core/-/elements-core-0.9.0.tgz#1350c61c143548ad73f06c9fdbda46f913e4546f"
+  integrity sha512-HW0wUQ4r4yLLn5ZOdw0CNH8IsIknybTs91jimCmnlh5vc1gdbn8RRluR5A1xjAjuMqlSzlyzGf9xjJhMkidHCA==
   dependencies:
     "@0xsquid/sdk" "1.8.0"
     "@cosmjs/cosmwasm-stargate" "0.31.0"
@@ -1578,8 +1578,8 @@
 
 "@leapwallet/elements-hooks@*":
   version "0.9.0"
-  resolved "https://npm.pkg.github.com/download/@leapwallet/elements-hooks/0.9.0/e8bdc014da2204a2540c3440eaea7b398597a861#e8bdc014da2204a2540c3440eaea7b398597a861"
-  integrity sha512-ujiNs2PSsmbiCU7vkoVICxPeYd/CLYAgYWmVtPnu//8TRIlcG2ASjqOvtyHneNN8aUJaOrxQ9LMUScI7XildLQ==
+  resolved "https://registry.npmjs.org/@leapwallet/elements-hooks/-/elements-hooks-0.9.0.tgz#fd497ed123c90649d4d01e4d1146a23b0e66cb93"
+  integrity sha512-hKpomRO5SH+TPVXMNGoZKSsucwmelfZOLO0xbdsDRlpnTiEbVnmBQvaMu07D6PPAvNAFczBh8F2Fx2JVLM4zFg==
   dependencies:
     "@cosmjs/cosmwasm-stargate" "0.31.0"
     "@cosmjs/encoding" "0.31.0"
@@ -1597,8 +1597,8 @@
 
 "@leapwallet/elements@0.9.0":
   version "0.9.0"
-  resolved "https://npm.pkg.github.com/download/@leapwallet/elements/0.9.0/f9a5ca2486dc9ec943ee75d5649bfa565115d62a#f9a5ca2486dc9ec943ee75d5649bfa565115d62a"
-  integrity sha512-s+Lsx3jzLcypbg2K/kQboV1pC87m98XGvMa822H5CU3+axoBhR6kVnLwyUsalAqkNn2OzeO6LZ0I2Iv6SFboMw==
+  resolved "https://registry.npmjs.org/@leapwallet/elements/-/elements-0.9.0.tgz#c164fd16ec4290b5253f57a60f328e18688589ee"
+  integrity sha512-bXe55WtGq3MaRcoQcIjIzOCipYtt9QvAplopRmSIZ1r2V+hPiNBesGXn0h3y+2ZqQVxUj9AEbHDD69iY6mKcSQ==
   dependencies:
     "@0xsquid/sdk" "1.8.0"
     "@cosmjs/cosmwasm-stargate" "0.31.0"
@@ -1631,8 +1631,8 @@
 
 "@leapwallet/name-matcha@1.6.0":
   version "1.6.0"
-  resolved "https://npm.pkg.github.com/download/@leapwallet/name-matcha/1.6.0/00ef8470404016e41b4e156167bf3eb347fc548f#00ef8470404016e41b4e156167bf3eb347fc548f"
-  integrity sha512-mUwTO4V7I9gLnWhnApE7XRd5cYbtXSwZ4Px24RQrh/9gMiT1rNfGXlWdJHxFy+mBisUrjnMcSu//cAtgFuKCvA==
+  resolved "https://registry.npmjs.org/@leapwallet/name-matcha/-/name-matcha-1.6.0.tgz#b697fad9c411e282a788764ccc2ca41052e7a871"
+  integrity sha512-mQ55L0kJToofkbZAqxSAvos0BNcY1mHKL7iOIOQNS0TQFS002epxNh9mIM6Qb9ODXt20zsK+O+flqGPOntLIZg==
   dependencies:
     "@cosmjs/cosmwasm-stargate" "0.30.0"
     bech32 "1.1.4"
