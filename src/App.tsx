@@ -224,80 +224,6 @@ const App = () => {
 
   const currentWallet = wallets[chain] as ConnectedWallet | undefined
 
-  //export interface StdSignDoc {
-  //     readonly chain_id: string;
-  //     readonly account_number: string;
-  //     readonly sequence: string;
-  //     readonly fee: StdFee;
-  //     readonly msgs: readonly AminoMsg[];
-  //     readonly memo: string;
-  // }
-  // export type Algo = "secp256k1" | "ed25519" | "sr25519";
-  // export interface AccountData {
-  //     /** A printable address (typically bech32 encoded) */
-  //     readonly address: string;
-  //     readonly algo: Algo;
-  //     readonly pubkey: Uint8Array;
-  // }
-  // export interface AminoSignResponse {
-  //     /**
-  //      * The sign doc that was signed.
-  //      * This may be different from the input signDoc when the signer modifies it as part of the signing process.
-  //      */
-  //     readonly signed: StdSignDoc;
-  //     readonly signature: StdSignature;
-  // }
-  // export interface OfflineAminoSigner {
-  //     /**
-  //      * Get AccountData array from wallet. Rejects if not enabled.
-  //      */
-  //     readonly getAccounts: () => Promise<readonly AccountData[]>;
-  //     /**
-  //      * Request signature from whichever key corresponds to provided bech32-encoded address. Rejects if not enabled.
-  //      *
-  //      * The signer implementation may offer the user the ability to override parts of the signDoc. It must
-  //      * return the doc that was signed in the response.
-  //      *
-  //      * @param signerAddress The address of the account that should sign the transaction
-  //      * @param signDoc The content that should be signed
-  //      */
-  //     readonly signAmino: (signerAddress: string, signDoc: StdSignDoc) => Promise<AminoSignResponse>;
-  // }
-
-  // const offlineAminoSigner = currentWallet
-  //   ? {
-  //       getAccounts: () => {
-  //         const pubKey = currentWallet?.pubKey.toAmino()
-  //         return Promise.resolve([
-  //           {
-  //             address: currentWallet.address,
-  //             algo: pubKey.type.includes('ed25519')
-  //               ? 'ed25519'
-  //               : pubKey.type.includes('secp256k1')
-  //               ? 'secp256k1'
-  //               : pubKey.type.includes('sr25519')
-  //               ? 'sr25519'
-  //               : 'unknown',
-  //             pubkey: pubKey.value.key
-  //           }
-  //         ])
-  //       },
-  //       signAmino: (
-  //         signerAddress: string,
-  //         signDoc: StdSignDoc
-  //       ): Promise<AminoSignResponse> => {
-  //         wallet.ex
-  //         return Promise.resolve({
-  //           signed: signDoc,
-  //           signature: {
-  //             pub_key: currentWallet.pubKey.toAmino(),
-  //             signature: currentWallet.sign(signDoc)
-  //           }
-  //         })
-  //       }
-  //     }
-  //   : undefined
-
   return (
     <main className="bg-gray-900 p-8 h-screen overflow-y-auto bg-fixed">
       <section className="text-gray-100 flex flex-col items-center justify-center text-sm sm:text-base md:text-lg space-y-3">
@@ -401,10 +327,36 @@ const App = () => {
                 Array.isArray(chainIds) ? chainIds : [chainIds]
               )
             },
-            getKey: (chainId: string) => {
+            getKey: async (chainId: string) => {
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
-              return currentWallet?.ext.getKey(chainId)
+              if (!currentWallet) {
+                throw new Error('wallet not connected')
+              }
+
+              await connect(type, [chainId])
+
+              const pubKey = currentWallet.pubKey.toAmino()
+              return {
+                name: 'Wallet',
+                algo: pubKey.type.includes('ed25519')
+                  ? 'ed25519'
+                  : pubKey.type.includes('secp256k1')
+                  ? 'secp256k1'
+                  : pubKey.type.includes('sr25519')
+                  ? 'sr25519'
+                  : 'unknown',
+                pubKey: Uint8Array.from(
+                  (pubKey.value.key as string)
+                    .split('')
+                    .map((c) => c.charCodeAt(0))
+                ),
+                address: Uint8Array.from(
+                  currentWallet.address.split('').map((c) => c.charCodeAt(0))
+                ),
+                bech32Address: currentWallet.address,
+                isNanoLedger: false
+              }
             },
             getOfflineSigner: (chainId: string) => {
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
