@@ -107,7 +107,7 @@ const App = () => {
   const [chain, setChain] = useState<string>('osmosis-1')
   const [wallet, setWallet] = useState<WalletName>(WalletName.LEAP)
   const [wallets, setWallets] = useState<Record<string, ConnectedWallet>>({})
-  const [type, setType] = useState<WalletType>(WalletType.EXTENSION)
+  const [walletType, setWalletType] = useState<WalletType>(WalletType.EXTENSION)
 
   const connect = useCallback(
     async (type: WalletType, chainIds: string[]) => {
@@ -146,8 +146,6 @@ const App = () => {
       alert((err as Error).message)
     }
   }, [chain, wallets])
-
-  console.log()
 
   const broadcastTx = useCallback(async () => {
     const wallet = wallets[chain]
@@ -224,6 +222,31 @@ const App = () => {
 
   const currentWallet = wallets[chain] as ConnectedWallet | undefined
 
+  useEffect(() => {
+    if (currentWallet) {
+      currentWallet
+        .estimateFee(
+          {
+            msgs: [
+              new MsgSend({
+                fromAddress: currentWallet.address,
+                toAddress: currentWallet.address,
+                amount: [
+                  {
+                    denom: getDenom(chain),
+                    amount: '1'
+                  }
+                ]
+              })
+            ],
+            memo: TX_MEMO
+          },
+          1.5
+        )
+        .then(console.log)
+    }
+  }, [currentWallet, chain])
+
   return (
     <main className="bg-gray-900 p-8 h-screen overflow-y-auto bg-fixed">
       <section className="text-gray-100 flex flex-col items-center justify-center text-sm sm:text-base md:text-lg space-y-3">
@@ -252,8 +275,8 @@ const App = () => {
           </select>
           <select
             className="bg-gray-700 rounded p-2 text-gray-200"
-            value={type}
-            onChange={(e) => setType(e.target.value as WalletType)}
+            value={walletType}
+            onChange={(e) => setWalletType(e.target.value as WalletType)}
           >
             {Object.keys(TYPES).map((type) => (
               <option key={type} value={type}>
@@ -272,7 +295,7 @@ const App = () => {
           </button>
           <button
             className="bg-green-700 hover:bg-green-600 text-green-100 p-2 rounded"
-            onClick={() => connect(type, [chain])}
+            onClick={() => connect(walletType, [chain])}
           >
             Connect
           </button>
@@ -308,8 +331,10 @@ const App = () => {
           title: 'Try out Liquidity Modal',
           subtitle: 'With CosmES',
           tabsConfig: {
-            [Tabs.CROSS_CHAIN_SWAPS]: {
-              enabled: false
+            [Tabs.SWAP]: {
+              defaults: {
+                destinationChainId: 'osmosis-1'
+              }
             },
             [Tabs.TRANSFER]: {
               defaults: {
@@ -323,7 +348,7 @@ const App = () => {
           walletClient: {
             enable: (chainIds: string | string[]): Promise<void> => {
               return connect(
-                type,
+                walletType,
                 Array.isArray(chainIds) ? chainIds : [chainIds]
               )
             },
@@ -334,7 +359,7 @@ const App = () => {
                 throw new Error('wallet not connected')
               }
 
-              await connect(type, [chainId])
+              await connect(walletType, [chainId])
 
               const pubKey = currentWallet.pubKey.toAmino()
               return {
@@ -364,7 +389,7 @@ const App = () => {
               return currentWallet?.ext.getOfflineSigner(chainId)
             }
           },
-          connectWallet: () => connect(type, [chain])
+          connectWallet: () => connect(walletType, [chain])
         }}
         theme={'light'}
         renderLiquidityButton={({ onClick }) => {
