@@ -14,7 +14,7 @@
     "@delphi-labs/shuttle": "^3.10.0",
     "@delphi-labs/shuttle-react": "^3.10.0",
     "@keplr-wallet/types": "0.12.37",
-    "@leapwallet/elements": "0.9.6",
+    "@leapwallet/elements": "^0.9.7",
     "@noble/hashes": "^1.3.2",
     "@noble/secp256k1": "^2.0.0",
     "@rainbow-me/rainbowkit": "1.1.3",
