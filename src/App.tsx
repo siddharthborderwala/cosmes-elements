@@ -13,6 +13,7 @@ import {
 } from 'cosmes/wallet'
 import { LiquidityModal, Tabs } from '@leapwallet/elements'
 import '@leapwallet/elements/styles.css'
+import type { SignDoc } from '@keplr-wallet/types'
 
 const WC_PROJECT_ID = '2b7d5a2da89dd74fed821d184acabf95'
 const SIGN_ARBITRARY_MSG =
@@ -222,30 +223,72 @@ const App = () => {
 
   const currentWallet = wallets[chain] as ConnectedWallet | undefined
 
-  useEffect(() => {
-    if (currentWallet) {
-      currentWallet
-        .estimateFee(
+  const walletClient = {
+    enable: (chainIds: string | string[]): Promise<void> => {
+      return connect(
+        walletType,
+        Array.isArray(chainIds) ? chainIds : [chainIds]
+      )
+    },
+    getAccount: async (chainId: string) => {
+      const connectedWallet = CONTROLLERS[wallet].connectedWallets.get(chainId)
+      if (!CHAINS[chainId]) {
+        throw new Error('Chain not supported')
+      }
+      if (!connectedWallet) {
+        CONTROLLERS[wallet].connect(walletType, [
           {
-            msgs: [
-              new MsgSend({
-                fromAddress: currentWallet.address,
-                toAddress: currentWallet.address,
-                amount: [
-                  {
-                    denom: getDenom(chain),
-                    amount: '1'
-                  }
-                ]
-              })
-            ],
-            memo: TX_MEMO
-          },
-          1.5
-        )
-        .then(console.log)
+            chainId,
+            rpc: getRpc(chainId),
+            gasPrice: getGasPrice(chainId)
+          }
+        ])
+      }
+      const address = CONTROLLERS[wallet].connectedWallets.get(chainId)!.address
+      return {
+        bech32Address: address
+      }
+    },
+    getSigner: async (chainId: string) => {
+      const connectedWallet = CONTROLLERS[wallet].connectedWallets.get(chainId)
+      if (!CHAINS[chainId]) {
+        throw new Error('Chain not supported')
+      }
+      if (!connectedWallet) {
+        CONTROLLERS[wallet].connect(walletType, [
+          {
+            chainId,
+            rpc: getRpc(chainId),
+            gasPrice: getGasPrice(chainId)
+          }
+        ])
+      }
+      return {
+        signDirect: async (address: string, signDoc: SignDoc) => {
+          const connectedWallet =
+            CONTROLLERS[wallet].connectedWallets.get(chainId)
+          if (!connectedWallet) {
+            throw new Error('wallet not connected')
+          }
+          if (!('ext' in connectedWallet)) {
+            throw new Error('wallet does not support signDirect')
+          }
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          const result = await connectedWallet.ext.signDirect?.(
+            chainId,
+            address,
+            signDoc
+          )
+
+          return {
+            signature: Buffer.from(result.signature.signature, 'base64'),
+            signed: result.signed
+          }
+        }
+      }
     }
-  }, [currentWallet, chain])
+  }
 
   return (
     <main className="bg-gray-900 p-8 h-screen overflow-y-auto bg-fixed">
@@ -345,53 +388,10 @@ const App = () => {
         }}
         walletClientConfig={{
           userAddress: currentWallet?.address,
-          walletClient: {
-            enable: (chainIds: string | string[]): Promise<void> => {
-              return connect(
-                walletType,
-                Array.isArray(chainIds) ? chainIds : [chainIds]
-              )
-            },
-            getKey: async (chainId: string) => {
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              if (!currentWallet) {
-                throw new Error('wallet not connected')
-              }
-
-              await connect(walletType, [chainId])
-
-              const pubKey = currentWallet.pubKey.toAmino()
-              return {
-                name: 'Wallet',
-                algo: pubKey.type.includes('ed25519')
-                  ? 'ed25519'
-                  : pubKey.type.includes('secp256k1')
-                  ? 'secp256k1'
-                  : pubKey.type.includes('sr25519')
-                  ? 'sr25519'
-                  : 'unknown',
-                pubKey: Uint8Array.from(
-                  (pubKey.value.key as string)
-                    .split('')
-                    .map((c) => c.charCodeAt(0))
-                ),
-                address: Uint8Array.from(
-                  currentWallet.address.split('').map((c) => c.charCodeAt(0))
-                ),
-                bech32Address: currentWallet.address,
-                isNanoLedger: false
-              }
-            },
-            getOfflineSigner: (chainId: string) => {
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              return currentWallet?.ext.getOfflineSigner(chainId)
-            }
-          },
+          walletClient: walletClient,
           connectWallet: () => connect(walletType, [chain])
         }}
-        theme={'light'}
+        theme={'dark'}
         renderLiquidityButton={({ onClick }) => {
           return (
             <button
