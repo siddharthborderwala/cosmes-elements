@@ -1452,10 +1452,10 @@
   dependencies:
     long "^4.0.0"
 
-"@leapwallet/elements-core@0.10.0-beta.6":
-  version "0.10.0-beta.6"
-  resolved "https://registry.npmjs.org/@leapwallet/elements-core/-/elements-core-0.10.0-beta.6.tgz#56c32c7b036c7274b7127199179e2fc61517f52c"
-  integrity sha512-iOybzMVvKFI/QRlB9s+Ie7HwrxhM89ZpBV/Te4XyilL46EXK6VnuM+s9d4PTSsLIEPxhr2ZM+Kj1vtw+28a1JQ==
+"@leapwallet/elements-core@0.10.0":
+  version "0.10.0"
+  resolved "https://registry.npmjs.org/@leapwallet/elements-core/-/elements-core-0.10.0.tgz#d4c7b8620c8f85ecfb241e9580502c585ebfd52f"
+  integrity sha512-bxfmgEAPghX5oXyzFu5uyjJgSX7rNUTG5yLgXt9VNY23YK5+PiwqAzAVD4fvJvawAJJ0C28ylVnK30XPrHivVA==
   dependencies:
     "@0xsquid/sdk" "1.8.0"
     "@cosmjs/cosmwasm-stargate" "0.31.0"
@@ -1466,15 +1466,29 @@
     bignumber.js "9.1.1"
     long "5.2.3"
 
-"@leapwallet/elements-hooks@0.10.0-beta.6":
-  version "0.10.0-beta.6"
-  resolved "https://registry.npmjs.org/@leapwallet/elements-hooks/-/elements-hooks-0.10.0-beta.6.tgz#4e1e2b6c96c036ed0a5dcba3016f38704e3ffb46"
-  integrity sha512-1SLz6AtfyOkm7C+/r9REATTYlGdEUAYOyiYtKpuTYwJX8QupyVsPKYaWgfZXVWHbNJ03JwyL4oaWy+O+g0odAA==
+"@leapwallet/elements-core@^0.10.0-beta.7":
+  version "0.10.0-beta.7"
+  resolved "https://registry.npmjs.org/@leapwallet/elements-core/-/elements-core-0.10.0-beta.7.tgz#46c21a845f9bff9bf140578d00c77fbabf141b1b"
+  integrity sha512-aWBdYUz+ocpFXxq4gv9yXrr3mMVQETjihWft0hewndacrZqdbumVQ0EDGJlGbOiEdY4nhfa1vkS0GK7m8xQ29g==
+  dependencies:
+    "@0xsquid/sdk" "1.8.0"
+    "@cosmjs/cosmwasm-stargate" "0.31.0"
+    "@cosmjs/encoding" "0.31.0"
+    "@cosmjs/stargate" "0.31.0"
+    "@leapwallet/name-matcha" "1.6.0"
+    bech32 "2.0.0"
+    bignumber.js "9.1.1"
+    long "5.2.3"
+
+"@leapwallet/elements-hooks@0.10.0":
+  version "0.10.0"
+  resolved "https://registry.npmjs.org/@leapwallet/elements-hooks/-/elements-hooks-0.10.0.tgz#14326ea4b1975e944fbbf8796e4d7f86e2b8f937"
+  integrity sha512-YDifdcYZRnWWVrTSBz0Mrk1RNkwwTeN/cdqqwtCfaeU0rNXeIkr3lCfO2wBnz69zXTl9CmCDBjXnxJR97q/qCw==
   dependencies:
     "@cosmjs/cosmwasm-stargate" "0.31.0"
     "@cosmjs/encoding" "0.31.0"
     "@cosmjs/stargate" "0.31.0"
-    "@leapwallet/elements-core" "0.10.0-beta.6"
+    "@leapwallet/elements-core" "0.10.0"
     "@leapwallet/name-matcha" "1.6.0"
     bech32 "2.0.0"
     bignumber.js "9.1.1"
@@ -1484,17 +1498,17 @@
     swr "2.1.5"
     wagmi "1.3.9"
 
-"@leapwallet/elements@0.10.0-beta.6":
-  version "0.10.0-beta.6"
-  resolved "https://registry.npmjs.org/@leapwallet/elements/-/elements-0.10.0-beta.6.tgz#b49188df2875854e23ab9ef893e3189f087a14c2"
-  integrity sha512-duovFxbx1Jx6Tl4p352p8JZpVu2F9NOHrYhNQxIa21+xHX8+sZnfdwMzqcErplbpfioxoljr8Z+vGV/rc7n5Gg==
+"@leapwallet/elements@0.10.0":
+  version "0.10.0"
+  resolved "https://registry.npmjs.org/@leapwallet/elements/-/elements-0.10.0.tgz#c54eac0ab151767293c390d62635dbeadd3889d4"
+  integrity sha512-B1SscKgv0yLV991p53p6XrTmScq+cAllaTuVtbevxjiIe/69EaPbCPe/3KRxnnUDdX2zR1qcaKOR60lO9Oj1qA==
   dependencies:
     "@0xsquid/sdk" "1.8.0"
     "@cosmjs/cosmwasm-stargate" "0.31.0"
     "@cosmjs/encoding" "0.31.0"
     "@cosmjs/stargate" "0.31.0"
-    "@leapwallet/elements-core" "0.10.0-beta.6"
-    "@leapwallet/elements-hooks" "0.10.0-beta.6"
+    "@leapwallet/elements-core" "0.10.0"
+    "@leapwallet/elements-hooks" "0.10.0"
     "@leapwallet/name-matcha" "1.6.0"
     "@phosphor-icons/react" "2.0.10"
     "@rainbow-me/rainbowkit" "1.0.7"

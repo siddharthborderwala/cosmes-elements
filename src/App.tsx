@@ -236,7 +236,7 @@ const App = () => {
         throw new Error('Chain not supported')
       }
       if (!connectedWallet) {
-        CONTROLLERS[wallet].connect(walletType, [
+        await CONTROLLERS[wallet].connect(walletType, [
           {
             chainId,
             rpc: getRpc(chainId),
@@ -244,9 +244,12 @@ const App = () => {
           }
         ])
       }
-      const address = CONTROLLERS[wallet].connectedWallets.get(chainId)!.address
+      const controller = CONTROLLERS[wallet].connectedWallets.get(chainId)!
       return {
-        bech32Address: address
+        bech32Address: controller.address,
+        pubKey: new Uint8Array(
+          Buffer.from(controller.pubKey.toAmino().value.key as string, 'base64')
+        )
       }
     },
     getSigner: async (chainId: string) => {
@@ -374,13 +377,26 @@ const App = () => {
           title: 'Try out Liquidity Modal',
           subtitle: 'With CosmES',
           tabsConfig: {
+            [Tabs.TRANSFER]: {
+              defaults: {
+                sourceChainId: 'osmosis-1'
+              }
+            },
             [Tabs.SWAP]: {
+              defaults: {
+                sourceChainId: 'osmosis-1',
+                destinationChainId: 'juno-1'
+              }
+            },
+            [Tabs.FIAT_ON_RAMP]: {
               defaults: {
                 destinationChainId: 'osmosis-1'
               }
             },
-            [Tabs.TRANSFER]: {
+            [Tabs.CROSS_CHAIN_SWAPS]: {
               defaults: {
+                sourceChainId: 43114,
+                sourceAssetSelector: ['symbol', 'USDC.e'],
                 destinationChainId: 'osmosis-1'
               }
             }
@@ -389,7 +405,9 @@ const App = () => {
         walletClientConfig={{
           userAddress: currentWallet?.address,
           walletClient: walletClient,
-          connectWallet: () => connect(walletType, [chain])
+          connectWallet: (chainId = 'osmosis-1') => {
+            connect(walletType, [chainId])
+          }
         }}
         theme={'dark'}
         renderLiquidityButton={({ onClick }) => {
